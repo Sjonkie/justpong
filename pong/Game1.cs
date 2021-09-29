@@ -124,6 +124,9 @@ namespace pong
             redpaddle = new paddle(padx, pady, framex, framey, "red");
             bluepaddle = new paddle(padx, pady, framex, framey, "blue");
 
+            redpaddle.paddlestart();
+            bluepaddle.paddlestart();
+
             base.Initialize();
         }
 
@@ -200,19 +203,19 @@ namespace pong
 
             // Paddle collision detection and correction
             // Red (Player 1)
-            if (ballPos.X < padx & ballPos.Y >= redPos.Y + critEdge * pady & ballPos.Y <= redPos.Y + (1 - critEdge) * pady)
+            if (ballPos.X < padx & ballPos.Y >= redpaddle.startpad.Y + critEdge * pady & ballPos.Y <= redpaddle.startpad.Y + (1 - critEdge) * pady)
             {
                 ballPos = new Vector2(padx, ballPos.Y);
                 theta = (Math.PI - theta);
                 ballSpeed += 0.2f;
             }
-            else if (ballPos.X < padx & ballPos.Y >= redPos.Y & ballPos.Y <= redPos.Y + critEdge * pady)
+            else if (ballPos.X < padx & ballPos.Y >= redpaddle.startpad.Y & ballPos.Y <= redpaddle.startpad.Y + critEdge * pady)
             {
                 ballPos = new Vector2(padx, ballPos.Y);
                 theta = (Math.PI - theta + critEffect);
                 ballSpeed += 0.4f;
             }
-            else if (ballPos.X < padx & ballPos.Y >= (1 - critEdge) * redPos.Y & ballPos.Y <= redPos.Y + pady)
+            else if (ballPos.X < padx & ballPos.Y >= (1 - critEdge) * redpaddle.startpad.Y & ballPos.Y <= redpaddle.startpad.Y + pady)
             {
                 ballPos = new Vector2(padx, ballPos.Y);
                 theta = (Math.PI - theta - critEffect);
@@ -221,19 +224,19 @@ namespace pong
 
             // Blue (Player 2)
             // Blue (Player 2)
-            if (ballPos.X > framex - padx - ballxy & ballPos.Y >= bluePos.Y + critEdge * pady & ballPos.Y <= bluePos.Y + (1 - critEdge) * pady)
+            if (ballPos.X > framex - padx - ballxy & ballPos.Y >= bluepaddle.startpad.Y + critEdge * pady & ballPos.Y <= bluepaddle.startpad.Y + (1 - critEdge) * pady)
             {
                 ballPos = new Vector2(framex - padx - ballxy, ballPos.Y);
                 theta = (Math.PI - theta);
                 ballSpeed += 0.2f;
             }
-            else if (ballPos.X > framex - padx - ballxy & ballPos.Y >= bluePos.Y & ballPos.Y <= bluePos.Y + critEdge * pady)
+            else if (ballPos.X > framex - padx - ballxy & ballPos.Y >= bluepaddle.startpad.Y & ballPos.Y <= bluepaddle.startpad.Y + critEdge * pady)
             {
                 ballPos = new Vector2(framex - padx - ballxy, ballPos.Y);
                 theta = (Math.PI - theta + critEffect);
                 ballSpeed += 0.4f;
             }
-            else if (ballPos.X > framex - padx - ballxy & ballPos.Y >= (1 - critEdge) * bluePos.Y & ballPos.Y <= bluePos.Y + pady)
+            else if (ballPos.X > framex - padx - ballxy & ballPos.Y >= (1 - critEdge) * bluepaddle.startpad.Y & ballPos.Y <= bluepaddle.startpad.Y + pady)
             {
                 ballPos = new Vector2(framex - padx - ballxy, ballPos.Y);
                 theta = (Math.PI - theta - critEffect);
@@ -245,9 +248,10 @@ namespace pong
         
         protected void Reset()
         {
-            redPos = new Vector2(0, startpady);
-            bluePos = new Vector2(startpadx, startpady);
-            ballPos = new Vector2(startballx, startbally);
+            redpaddle.paddlestart();
+            bluepaddle.paddlestart();
+            ballPos.X = startballx;
+            ballPos.Y = startbally;
             ballSpeed = 5.0f;
             theta = randomVal.NextDouble() * Math.Atan((1.1 * framex) / (1.1 * framey)) * 2 - Math.Atan((1.1 * framex) / (1.1 * framey)) + randomVal.Next(2) * Math.PI;
         }
@@ -279,7 +283,8 @@ namespace pong
             }
             else if (gamestage == 1)
             {
-                redpaddle.paddlemovement("red");
+                redpaddle.paddlemovement();
+                bluepaddle.paddlemovement();
                 BallMovement();
                 BallCollision();
                 
@@ -339,8 +344,8 @@ namespace pong
         {
             //draw function for sprites in game
             sprites.Draw(ball, ballPos, null, Color.White);
-            sprites.Draw(redpad, redPos, null, Color.White);
-            sprites.Draw(bluepad, bluePos, null, Color.White);
+            sprites.Draw(redpad, redpaddle.startpad, null, Color.White);
+            sprites.Draw(bluepad, bluepaddle.startpad, null, Color.White);
 
 
             // Drawing the score in loops. The first loop draws 3 black scores first. The other two loops overlay this with colored scores based on the scores stored in score[].

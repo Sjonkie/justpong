@@ -45,8 +45,6 @@ namespace pong
 
         public Vector2 paddlestart()
         {
-            startpady = framey / 2 - pady / 2;
-            startpadx = framex - padx;
             if (color == "red")
             {
                 startpad.X = 0;
@@ -60,22 +58,10 @@ namespace pong
             return startpad;
         }
 
-        public void paddlemovement(string color)
+        public void paddlemovement()
         {
             int frameypady = framey - pady;
 
-            if (color == "red")
-            {
-                up = Keys.W;
-                down = Keys.S;
-            }
-            
-            else if (color == "blue")
-            {
-                up = Keys.Up;
-                down = Keys.Down;
-            }
-            
             // up
             if (Keyboard.GetState().IsKeyDown(up))
             {
