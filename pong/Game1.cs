@@ -22,7 +22,7 @@ namespace pong
         //music
         private Song menu_music;
         //rectangles and vectors for sprites
-        private Vector2 redPos, bluePos, ballPos;
+        private Vector2 ballPos;
         private Rectangle logoPos;
         //vectors for text
         private Vector2 startstring;
@@ -58,10 +58,8 @@ namespace pong
         // start positions objects
         private int startbally;
         private int startballx;
-        private int startpady;
-        private int startpadx;
         private int gamestage;
-        private int frameypady;
+        private int winPosY;
 
         paddle redpaddle;
         paddle bluepaddle;
@@ -100,24 +98,16 @@ namespace pong
             playerSpeed = 5;
             ballSpeed = 5.0f;
 
-            //object start position values
-            startpady = framey / 2 - pady / 2;
-            startpadx = framex - padx;
 
             // load rectangle location for sprites
-            redPos = new Vector2(0, startpady);
-            bluePos = new Vector2(startpadx, startpady);
             ballPos = new Vector2(startballx, startbally);
-
-            // text positions
-            int startPosY = framey / 24;
-            int winPosY = framey / 12;
 
             // random angle
             randomVal = new Random();
             theta = randomVal.NextDouble() * Math.Atan((1.1 * framex) / (1.1 * framey)) * 2 - Math.Atan((1.1 * framex) / (1.1 * framey)) + randomVal.Next(2) * Math.PI;
 
-            frameypady = framey - pady;
+            winPosY = framey / 12;
+
             critEdge = 0.25f;
             critEffect = Math.PI / 6;
 
@@ -146,39 +136,6 @@ namespace pong
             menu_music = Content.Load<Song>("Nameless Song");
            
             
-        }
-
-        protected void PlayerMovement()
-        {
-
-
-            // Moving the red paddle
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
-                redPos.Y -= playerSpeed;
-                if (redPos.Y < 0)
-                    redPos.Y = 0; 
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                redPos.Y += playerSpeed;
-                if (redPos.Y > frameypady)
-                    redPos.Y = frameypady; 
-            }
-
-            // Moving the blue paddle
-            if (Keyboard.GetState().IsKeyDown(Keys.Up))
-            {
-                bluePos.Y -= playerSpeed;
-                if (bluePos.Y < 0)
-                    bluePos.Y = 0;
-            }
-            else if (Keyboard.GetState().IsKeyDown(Keys.Down))
-            {
-                bluePos.Y +=  playerSpeed;
-                if (bluePos.Y > frameypady)
-                    bluePos.Y =  frameypady; 
-            }
         }
 
         protected void BallMovement()
@@ -385,7 +342,6 @@ namespace pong
         void DrawWinblue()
         {
             //text for when blue wins
-            int winPosY = framey / 12;
             Vector2 bsize = comic.MeasureString(bluewins);
             Vector2 bsize2 = comic.MeasureString(pressenter);
             Vector2 winPos = new Vector2((framex / 2) - (bsize.X / 2), winPosY);
