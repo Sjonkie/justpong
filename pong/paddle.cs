@@ -13,6 +13,9 @@ namespace pong
         public int framex, framey;
         public string color;
         public Vector2 startpad;
+        private int playerSpeed;
+        Keys up;
+        Keys down;
 
         public paddle(int apadx, int apady, int aframex, int aframey, string acolor)
         {
@@ -21,12 +24,26 @@ namespace pong
             color = acolor;
             framex = aframex;
             framey = aframey;
+            playerSpeed = 5;
 
-            paddlestart(color);
-            paddlemovement(color);
+            if (color == "red")
+            {
+                up = Keys.W;
+                down = Keys.S;
+            }
+
+            else if (color == "blue")
+            {
+                up = Keys.Up;
+                down = Keys.Down;
+            }
+
+
+
+
         }
 
-        Vector2 paddlestart(string color)
+        public Vector2 paddlestart()
         {
             startpady = framey / 2 - pady / 2;
             startpadx = framex - padx;
@@ -43,12 +60,9 @@ namespace pong
             return startpad;
         }
 
-        void paddlemovement(string color)
+        public void paddlemovement(string color)
         {
             int frameypady = framey - pady;
-            int playerSpeed = 5;
-            var up = Keys.None;
-            var down = Keys.None;
 
             if (color == "red")
             {

@@ -63,6 +63,8 @@ namespace pong
         private int gamestage;
         private int frameypady;
 
+        paddle redpaddle;
+        paddle bluepaddle;
 
         public Game1()
         {
@@ -74,7 +76,9 @@ namespace pong
 
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
-            
+
+
+
         }
 
 
@@ -116,9 +120,15 @@ namespace pong
             frameypady = framey - pady;
             critEdge = 0.25f;
             critEffect = Math.PI / 6;
-            
+
+            redpaddle = new paddle(padx, pady, framex, framey, "red");
+            bluepaddle = new paddle(padx, pady, framex, framey, "blue");
+
             base.Initialize();
         }
+
+
+        
 
         protected override void LoadContent()
         {
@@ -137,6 +147,8 @@ namespace pong
 
         protected void PlayerMovement()
         {
+
+
             // Moving the red paddle
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
@@ -267,7 +279,7 @@ namespace pong
             }
             else if (gamestage == 1)
             {
-                PlayerMovement();
+                redpaddle.paddlemovement("red");
                 BallMovement();
                 BallCollision();
                 
