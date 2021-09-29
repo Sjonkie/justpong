@@ -40,10 +40,10 @@ namespace pong
         private int ballxy = 16;
 
         //text messegas
-        private string start ="press space to start";
-        private string bluewins ="blue wins";
-        private string redwins ="red wins";
-        private string pressenter = "press enter";
+        private string start ="PRESS SPACE TO START";
+        private string bluewins ="BLUE WINS";
+        private string redwins ="RED WINS";
+        private string pressenter = "PRESS ENTER";
 
         //lives
         /*int redlives, bluelives;*/
