@@ -132,7 +132,7 @@ namespace pong
             comic = Content.Load<SpriteFont>("comicfont");
             menu_music = Content.Load<Song>("Nameless Song");
            
-            Menu_music();
+            
         }
 
         protected void PlayerMovement()
@@ -258,6 +258,7 @@ namespace pong
 
             if (gamestage == 0)
             {
+                Menu_music();
 
                 if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 {
