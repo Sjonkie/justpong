@@ -188,7 +188,7 @@ namespace pong
                 theta = (Math.PI - theta);
                 ballSpeed += 0.2f;
             }
-            else if (ballPos.X > framex - padx - ballxy & ballPos.Y >= ballxy- bluepaddle.startpad.Y & ballPos.Y <= bluepaddle.startpad.Y + critEdge * pady)
+            else if (ballPos.X > framex - padx - ballxy & ballPos.Y >= - ballxy + bluepaddle.startpad.Y & ballPos.Y <= bluepaddle.startpad.Y + critEdge * pady)
             {
                 ballPos = new Vector2(framex - padx - ballxy, ballPos.Y);
                 theta = (Math.PI - theta + critEffect);
