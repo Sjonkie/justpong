@@ -41,8 +41,8 @@ namespace pong
 
         //text messegas
         private string start ="press space to start";
-        private string bluewins ="Blue Wins";
-        private string redwins ="Red Wins";
+        private string bluewins ="blue wins";
+        private string redwins ="red wins";
         private string pressenter = "press enter";
 
         //lives
