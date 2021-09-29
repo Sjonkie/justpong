@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 
 namespace pong
@@ -9,107 +10,113 @@ namespace pong
 
     public class Game1 : Game
     {
-        enum GameState
-        {
-            start,
-            play,
-            end
-        }
 
         //sprites batch
         private GraphicsDeviceManager _graphics;
         private SpriteBatch sprites;
+        //comic sans font
+        private SpriteFont comic;
         //sprites
-        private Texture2D redpad;
-        private Texture2D bluepad;
-        private Texture2D ball;
+        private Texture2D redpad, bluepad, ball, logo;
+
+        //music
+        private Song menu_music;
         //rectangles and vectors for sprites
-        private Vector2 redPos, bluePos;
-        private Rectangle rposscore1, rposscore2, rposscore3;
-        private Rectangle bposscore1, bposscore2, bposscore3;
-        private Vector2 ballPos;
+        private Vector2 redPos, bluePos, ballPos;
+        private Rectangle logoPos;
+        //vectors for text
+        private Vector2 startstring;
 
         //random value
         private Random randomVal;
         private double theta;
-        
+
         //frame with height values
-        int framex = 600;
-        int framey = 480;
+        public int framex = 600;
+        public int framey = 480;
         //object size values
-        int padx = 16;
-        int pady = 96;
-        int ballxy = 16;
+        private int padx = 16;
+        private int pady = 96;
+        private int ballxy = 16;
 
         //text messegas
-        string start = "press space to start the game";
-        string bluewins = "Red was bad so blue is the winner";
-        string Redwins = "Blue wasn't good enough red is the winner";
+        private string start ="press space to start";
+        private string bluewins ="Blue Wins";
+        private string redwins ="Red Wins";
+        private string pressenter = "press enter";
 
         //lives
-        int redlives, bluelives;
+        /*int redlives, bluelives;*/
+        private int[] score;
+        private Rectangle scoreball;
 
         // object speeds
         private int playerSpeed;
-        private float ballSpeed;
-        private KeyboardState currentKBstate, previousKBstate;
+        private float ballSpeed, critEdge;
+        private double critEffect;
 
-
+        // start positions objects
+        private int startbally;
+        private int startballx;
+        private int startpady;
+        private int startpadx;
+        private int gamestage;
+        private int frameypady;
 
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
-            
+
             //frame with height and with
             _graphics.PreferredBackBufferWidth = framex;
             _graphics.PreferredBackBufferHeight = framey;
 
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
-
+            
         }
 
 
         protected override void Initialize()
-        {
+        {   
             // TODO: Add your initialization logic here
             //lives
 
-            int startbally = framey / 2 - ballxy / 2;
-            int startballx = framex / 2 - ballxy / 2;
+            startbally = framey / 2 - ballxy / 2;
+            startballx = framex / 2 - ballxy / 2;
 
 
             // lives and removal
-            redlives = 3;
-            bluelives = 3;
+            score = new int[2];
+            score[0] = 3;
+            score[1] = 3;
 
             // object speeds
             playerSpeed = 5;
             ballSpeed = 5.0f;
 
             //object start position values
-            int startpady = framey / 2 - pady / 2;
-            int startpadx = framex - padx;
+            startpady = framey / 2 - pady / 2;
+            startpadx = framex - padx;
 
             // load rectangle location for sprites
             redPos = new Vector2(0, startpady);
             bluePos = new Vector2(startpadx, startpady);
             ballPos = new Vector2(startballx, startbally);
 
-            rposscore1 = new Rectangle(framex / 15 + 4 * ballxy, framey / 20, ballxy, ballxy);
-            rposscore2 = new Rectangle(framex / 15 + 2 * ballxy, framey / 20, ballxy, ballxy);
-            rposscore3 = new Rectangle(framex / 15, framey / 20, ballxy, ballxy);
-
-            bposscore1 = new Rectangle(framex / 15*14 - ballxy - ballxy*4, framey/20, ballxy, ballxy);
-            bposscore2 = new Rectangle(framex / 15*14 - ballxy - ballxy*2, framey/20, ballxy, ballxy);
-            bposscore3 = new Rectangle(framex / 15*14 - ballxy, framey/20, ballxy, ballxy);
-
+            // text positions
+            int startPosY = framey / 24;
+            int winPosY = framey / 12;
 
             // random angle
-            
             randomVal = new Random();
-            theta = randomVal.NextDouble() * 2 * Math.PI;
+            theta = randomVal.NextDouble() * Math.Atan((1.1 * framex) / (1.1 * framey)) * 2 - Math.Atan((1.1 * framex) / (1.1 * framey)) + randomVal.Next(2) * Math.PI;
+
+            frameypady = framey - pady;
+            critEdge = 0.25f;
+            critEffect = Math.PI / 6;
+            
             base.Initialize();
         }
 
@@ -121,37 +128,41 @@ namespace pong
             redpad = Content.Load<Texture2D>("rodeSpeler");
             bluepad = Content.Load<Texture2D>("blauweSpeler");
             ball = Content.Load<Texture2D>("bal");
-
+            logo = Content.Load<Texture2D>("logo");
+            comic = Content.Load<SpriteFont>("comicfont");
+            menu_music = Content.Load<Song>("Nameless Song");
+           
+            Menu_music();
         }
 
-        protected void playerMovement()
+        protected void PlayerMovement()
         {
             // Moving the red paddle
-            if (currentKBstate.IsKeyDown(Keys.W))
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                redPos -= new Vector2(0, playerSpeed);
+                redPos.Y -= playerSpeed;
                 if (redPos.Y < 0)
-                { redPos = new Vector2(0, 0); }
+                    redPos.Y = 0; 
             }
-            else if (currentKBstate.IsKeyDown(Keys.S))
+            else if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                redPos += new Vector2(0, playerSpeed);
-                if (redPos.Y > framey - pady)
-                { redPos = new Vector2(0, framey - pady); }
+                redPos.Y += playerSpeed;
+                if (redPos.Y > frameypady)
+                    redPos.Y = frameypady; 
             }
 
             // Moving the blue paddle
-            if (currentKBstate.IsKeyDown(Keys.Up))
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
             {
-                bluePos -= new Vector2(0, playerSpeed);
+                bluePos.Y -= playerSpeed;
                 if (bluePos.Y < 0)
-                { bluePos = new Vector2(framex - padx, 0); }
+                    bluePos.Y = 0;
             }
-            else if (currentKBstate.IsKeyDown(Keys.Down))
+            else if (Keyboard.GetState().IsKeyDown(Keys.Down))
             {
-                bluePos += new Vector2(0, playerSpeed);
-                if (bluePos.Y > framey - pady)
-                { bluePos = new Vector2(framex - padx, framey - pady); }
+                bluePos.Y +=  playerSpeed;
+                if (bluePos.Y > frameypady)
+                    bluePos.Y =  frameypady; 
             }
         }
 
@@ -177,120 +188,219 @@ namespace pong
 
             // Paddle collision detection and correction
             // Red (Player 1)
-            if (ballPos.X < padx & ballPos.Y >= redPos.Y & ballPos.Y <= redPos.Y + pady)
+            if (ballPos.X < padx & ballPos.Y >= redPos.Y + critEdge * pady & ballPos.Y <= redPos.Y + (1 - critEdge) * pady)
             {
                 ballPos = new Vector2(padx, ballPos.Y);
                 theta = (Math.PI - theta);
                 ballSpeed += 0.2f;
             }
+            else if (ballPos.X < padx & ballPos.Y >= redPos.Y & ballPos.Y <= redPos.Y + critEdge * pady)
+            {
+                ballPos = new Vector2(padx, ballPos.Y);
+                theta = (Math.PI - theta + critEffect);
+                ballSpeed += 0.4f;
+            }
+            else if (ballPos.X < padx & ballPos.Y >= (1 - critEdge) * redPos.Y & ballPos.Y <= redPos.Y + pady)
+            {
+                ballPos = new Vector2(padx, ballPos.Y);
+                theta = (Math.PI - theta - critEffect);
+                ballSpeed += 0.4f;
+            }
+
             // Blue (Player 2)
-            else if (ballPos.X > framex - 32 & ballPos.Y >= bluePos.Y & ballPos.Y <= bluePos.Y + pady)
+            // Blue (Player 2)
+            if (ballPos.X > framex - padx - ballxy & ballPos.Y >= bluePos.Y + critEdge * pady & ballPos.Y <= bluePos.Y + (1 - critEdge) * pady)
             {
                 ballPos = new Vector2(framex - padx - ballxy, ballPos.Y);
                 theta = (Math.PI - theta);
                 ballSpeed += 0.2f;
             }
-        }
+            else if (ballPos.X > framex - padx - ballxy & ballPos.Y >= bluePos.Y & ballPos.Y <= bluePos.Y + critEdge * pady)
+            {
+                ballPos = new Vector2(framex - padx - ballxy, ballPos.Y);
+                theta = (Math.PI - theta + critEffect);
+                ballSpeed += 0.4f;
+            }
+            else if (ballPos.X > framex - padx - ballxy & ballPos.Y >= (1 - critEdge) * bluePos.Y & ballPos.Y <= bluePos.Y + pady)
+            {
+                ballPos = new Vector2(framex - padx - ballxy, ballPos.Y);
+                theta = (Math.PI - theta - critEffect);
+                ballSpeed += 0.4f;
+            }
 
+
+        }
+        
+        protected void Reset()
+        {
+            redPos = new Vector2(0, startpady);
+            bluePos = new Vector2(startpadx, startpady);
+            ballPos = new Vector2(startballx, startbally);
+            ballSpeed = 5.0f;
+            theta = randomVal.NextDouble() * Math.Atan((1.1 * framex) / (1.1 * framey)) * 2 - Math.Atan((1.1 * framex) / (1.1 * framey)) + randomVal.Next(2) * Math.PI;
+        }
+        
+        void Menu_music()
+        {
+            MediaPlayer.Play(menu_music);
+            MediaPlayer.IsRepeating = true;
+        }
 
         protected override void Update(GameTime gameTime)
         {
+
+
             //exit game
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             
 
-            currentKBstate = Keyboard.GetState();
-            playerMovement();
-            BallMovement();
-            BallCollision();
-
-
-
-            // lives counter
-            int startbally = framey / 2 - ballxy / 2;
-            int startballx = framex / 2 - ballxy / 2;
-            if (ballPos.X > framex - ballxy)
+            if (gamestage == 0)
             {
-                bluelives -= 1;
-                ballPos.X = startballx;
-                ballPos.Y = startbally;
-            }
 
-            if (ballPos.X < 0)
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                {
+                    gamestage++;
+                }
+            }
+            else if (gamestage == 1)
             {
-                redlives -= 1;
-                ballPos.X = startballx;
-                ballPos.Y = startbally;
-            }
+                PlayerMovement();
+                BallMovement();
+                BallCollision();
+                
+                // lives counter (updated with the array)
 
+                if (ballPos.X > framex - ballxy)
+                {
+                    /*bluelives -= 1;*/
+                    score[1] -= 1;
+                    if (score[1] == 0)
+                        gamestage = 3;
+                    else
+                        Reset();
+                 
+                }
+                if (ballPos.X < 0)
+                {
+                    /*redlives -= 1;*/
+                    score[0] -= 1;
+                    if (score[0] == 0)
+                        gamestage = 2;
+                    else
+                        Reset();
+                }
+            }
+            else if ((gamestage == 2 || gamestage == 3) && Keyboard.GetState().IsKeyDown(Keys.Enter))
+            {
+                Reset();
+                score[0] = 3;
+                score[1] = 3;
+                gamestage = 0;
+
+            }
 
             // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
 
-        protected override void Draw(GameTime gameTime)
+        void Drawmenu()
         {
-            GraphicsDevice.Clear(Color.White);
+            int logosize = 220;
+            //start logo
+            logoPos = new Rectangle((framex / 2) - (logosize / 2), 0, logosize, logosize);
+            sprites.Draw(logo, logoPos, null, Color.White);
 
+            //press space text
+            int startPosY = logosize;
+            Vector2 ssize = comic.MeasureString(start);
+            startstring = new Vector2((framex / 2) - (ssize.X / 2), startPosY);
+            sprites.DrawString(comic, start, startstring, Color.Red);
+            //background
+            GraphicsDevice.Clear(Color.LightBlue);
+        }
 
-            //draw function for sprites
-            sprites.Begin();
+        void Drawgame1()
+        {
+            //draw function for sprites in game
+            sprites.Draw(ball, ballPos, null, Color.White);
             sprites.Draw(redpad, redPos, null, Color.White);
             sprites.Draw(bluepad, bluePos, null, Color.White);
-            sprites.Draw(ball, ballPos, null, Color.White);
 
-            // lives counter
-            switch (redlives)
+
+            // Drawing the score in loops. The first loop draws 3 black scores first. The other two loops overlay this with colored scores based on the scores stored in score[].
+            for (int i = 3; i > 0; i--)
             {
-                case 1:
-                    sprites.Draw(ball, rposscore1, null, Color.Red);
-                    sprites.Draw(ball, rposscore2, null, Color.Black);
-                    sprites.Draw(ball, rposscore3, null, Color.Black);
-                    break;
-
-                case 2:
-                    sprites.Draw(ball, rposscore1, null, Color.Red);
-                    sprites.Draw(ball, rposscore2, null, Color.Red);
-                    sprites.Draw(ball, rposscore3, null, Color.Black);
-                    break;
-
-                case 3:
-                    sprites.Draw(ball, rposscore1, null, Color.Red);
-                    sprites.Draw(ball, rposscore2, null, Color.Red);
-                    sprites.Draw(ball, rposscore3, null, Color.Red);
-                    break;
+                scoreball = new Rectangle(framex / 15 + (2 * i - 1) * ballxy, framey / 20, ballxy, ballxy);
+                sprites.Draw(ball, scoreball, null, Color.Black);
+                scoreball = new Rectangle(framex / 15 * 14 - ballxy - (2 * i - 1) * ballxy, framey / 20, ballxy, ballxy);
+                sprites.Draw(ball, scoreball, null, Color.Black);
+            }
+            for (int i = score[0]; i > 0; i--)
+            {
+                scoreball = new Rectangle(framex / 15 + (2 * i - 1) * ballxy, framey / 20, ballxy, ballxy);
+                sprites.Draw(ball, scoreball, null, Color.Red);
+            }
+            for (int i = score[1]; i > 0; i--)
+            {
+                scoreball = new Rectangle(framex / 15 * 14 - ballxy - (2 * i - 1) * ballxy, framey / 20, ballxy, ballxy);
+                sprites.Draw(ball, scoreball, null, Color.Blue);
             }
 
-            switch (bluelives)
+            GraphicsDevice.Clear(Color.White);
+        }
+
+        void DrawWinred()
+        {
+            //text for when red wins
+            int winPosY = framey / 12;
+            Vector2 rsize = comic.MeasureString(redwins);
+            Vector2 rsize2 = comic.MeasureString(pressenter);
+            Vector2 winPos = new Vector2((framex / 2) - (rsize.X / 2), winPosY);
+            Vector2 winPos2 = new Vector2((framex / 2) - (rsize2.X / 2), winPosY + rsize.Y);
+            sprites.DrawString(comic, redwins, winPos, Color.Red);
+            sprites.DrawString(comic, pressenter, winPos2, Color.Red);
+        }
+
+        void DrawWinblue()
+        {
+            //text for when blue wins
+            int winPosY = framey / 12;
+            Vector2 bsize = comic.MeasureString(bluewins);
+            Vector2 bsize2 = comic.MeasureString(pressenter);
+            Vector2 winPos = new Vector2((framex / 2) - (bsize.X / 2), winPosY);
+            Vector2 winPos2 = new Vector2((framex / 2) - (bsize2.X / 2), winPosY + bsize.Y);
+            sprites.DrawString(comic, bluewins, winPos, Color.Blue);
+            sprites.DrawString(comic, pressenter, winPos2, Color.Blue);
+        }
+
+
+        protected override void Draw(GameTime gameTime)
+        {
+
+            sprites.Begin();
+            if (gamestage == 0)
             {
-                case 1:
-                    sprites.Draw(ball, bposscore1, null, Color.Blue);
-                    sprites.Draw(ball, bposscore2, null, Color.Black);
-                    sprites.Draw(ball, bposscore3, null, Color.Black);
-                    break;
+                Drawmenu();
+            }
+            else if (gamestage == 1)
+                Drawgame1();
 
-                case 2:
-                    sprites.Draw(ball, bposscore1, null, Color.Blue);
-                    sprites.Draw(ball, bposscore2, null, Color.Blue);
-                    sprites.Draw(ball, bposscore3, null, Color.Black);
-                    break;
-
-                case 3:
-                    sprites.Draw(ball, bposscore1, null, Color.Blue);
-                    sprites.Draw(ball, bposscore2, null, Color.Blue);
-                    sprites.Draw(ball, bposscore3, null, Color.Blue);
-                    break;
+            else if (gamestage == 2)
+            {
+                Drawgame1();
+                DrawWinblue();  
+            }
+            else if (gamestage == 3)
+            {
+                Drawgame1();
+                DrawWinred();
             }
 
-
-            base.Draw(gameTime);
-            
             sprites.End();
-
-            
+            base.Draw(gameTime);
         }
     }
 }
