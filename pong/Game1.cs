@@ -110,7 +110,7 @@ namespace pong
             winPosY = framey / 12;
 
             critEdge = 0.25f;
-            critEffect = Math.PI / 6;
+            critEffect = Math.PI / 8;
 
             redpaddle = new paddle(padx, pady, framex, framey, "red");
             bluepaddle = new paddle(padx, pady, framex, framey, "blue");
@@ -167,13 +167,13 @@ namespace pong
                 theta = (Math.PI - theta);
                 ballSpeed += 0.2f;
             }
-            else if (ballPos.X < padx & ballPos.Y >= redpaddle.startpad.Y & ballPos.Y <= redpaddle.startpad.Y + critEdge * pady)
+            else if (ballPos.X < padx & ballPos.Y >= redpaddle.startpad.Y & ballPos.Y - ballxy <= redpaddle.startpad.Y + critEdge * pady)
             {
                 ballPos = new Vector2(padx, ballPos.Y);
                 theta = (Math.PI - theta + critEffect);
                 ballSpeed += 0.4f;
             }
-            else if (ballPos.X < padx & ballPos.Y >= (1 - critEdge) * redpaddle.startpad.Y & ballPos.Y <= redpaddle.startpad.Y + pady)
+            else if (ballPos.X < padx & ballPos.Y >= (1 - critEdge) * pady + redpaddle.startpad.Y & ballPos.Y <= ballxy + redpaddle.startpad.Y + pady)
             {
                 ballPos = new Vector2(padx, ballPos.Y);
                 theta = (Math.PI - theta - critEffect);
@@ -188,13 +188,13 @@ namespace pong
                 theta = (Math.PI - theta);
                 ballSpeed += 0.2f;
             }
-            else if (ballPos.X > framex - padx - ballxy & ballPos.Y >= bluepaddle.startpad.Y & ballPos.Y <= bluepaddle.startpad.Y + critEdge * pady)
+            else if (ballPos.X > framex - padx - ballxy & ballPos.Y >= ballxy- bluepaddle.startpad.Y & ballPos.Y <= bluepaddle.startpad.Y + critEdge * pady)
             {
                 ballPos = new Vector2(framex - padx - ballxy, ballPos.Y);
                 theta = (Math.PI - theta + critEffect);
                 ballSpeed += 0.4f;
             }
-            else if (ballPos.X > framex - padx - ballxy & ballPos.Y >= (1 - critEdge) * bluepaddle.startpad.Y & ballPos.Y <= bluepaddle.startpad.Y + pady)
+            else if (ballPos.X > framex - padx - ballxy & ballPos.Y >= (1 - critEdge) * pady + bluepaddle.startpad.Y & ballPos.Y <= ballxy + bluepaddle.startpad.Y + pady)
             {
                 ballPos = new Vector2(framex - padx - ballxy, ballPos.Y);
                 theta = (Math.PI - theta - critEffect);
