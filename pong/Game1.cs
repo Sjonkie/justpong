@@ -105,6 +105,7 @@ namespace pong
             // random angle
             randomVal = new Random();
             theta = randomVal.NextDouble() * Math.Atan((1.1 * framex) / (1.1 * framey)) * 2 - Math.Atan((1.1 * framex) / (1.1 * framey)) + randomVal.Next(2) * Math.PI;
+            theta = 0;
 
             winPosY = framey / 12;
 
