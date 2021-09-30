@@ -201,7 +201,28 @@ namespace pong
                 ballSpeed += 0.4f;
             }
 
+            AngleCheck();
 
+
+        }
+        protected void AngleCheck()
+        {
+            if (theta % (2 * Math.PI) > Math.PI / 3 & theta % (2 * Math.PI) < Math.PI / 2)
+            {
+                theta = Math.PI / 3;
+            }
+            else if (theta % (2 * Math.PI) > Math.PI / 2 & theta % (2 * Math.PI) < 2 * Math.PI / 3)
+            {
+                theta = 2 * Math.PI / 3;
+            }
+            else if (theta % (2 * Math.PI) > 4 * Math.PI / 3 & theta % (2 * Math.PI) < 3 * Math.PI / 2)
+            {
+                theta = 4 * Math.PI / 3;
+            }
+            else if (theta % (2 * Math.PI) > 3 * Math.PI / 2 & theta % (2 * Math.PI) < 5 * Math.PI / 3)
+            {
+                theta = 5 * Math.PI / 3;
+            }
         }
         
         protected void Reset()
