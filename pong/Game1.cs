@@ -139,7 +139,8 @@ namespace pong
         protected void BallMovement()
         {
             // Updating the position of the ball
-            ballPos += new Vector2((float)(ballSpeed * Math.Cos(theta)), (float)(-ballSpeed * Math.Sin(theta)));
+            ballPos.X += (float)(ballSpeed * Math.Cos(theta));
+            ballPos.Y += (float)(-ballSpeed * Math.Sin(theta));
         }
 
         protected void BallCollision()
@@ -147,31 +148,31 @@ namespace pong
             // Floor and roof collision detection and correction
             if (ballPos.Y < 0)
             {
-                ballPos = new Vector2(ballPos.X, 0);
+                ballPos.Y = 0;
                 theta = (2 * Math.PI - theta);
             }
             else if (ballPos.Y > frameHeight - ballDim)
             {
-                ballPos = new Vector2(ballPos.X, frameHeight - ballDim);
+                ballPos.Y = frameHeight - ballDim;
                 theta = (2 * Math.PI - theta);
             }
 
             // Paddle collision detection and correction including edge effect (Player 1)
             if (ballPos.X < padWidth & ballPos.Y >= redPaddle.paddlePos.Y + critEdge * padHeight & ballPos.Y <= redPaddle.paddlePos.Y + (1 - critEdge) * padHeight)
             {
-                ballPos = new Vector2(padWidth, ballPos.Y);
+                ballPos.X = padWidth;
                 theta = (Math.PI - theta);
                 ballSpeed += 0.2f;
             }
             else if (ballPos.X < padWidth & ballPos.Y >= -ballDim + redPaddle.paddlePos.Y & ballPos.Y - ballDim <= redPaddle.paddlePos.Y + critEdge * padHeight)
             {
-                ballPos = new Vector2(padWidth, ballPos.Y);
+                ballPos.X =  padWidth;
                 theta = (Math.PI - theta + critEffect);
                 ballSpeed += 0.4f;
             }
             else if (ballPos.X < padWidth & ballPos.Y >= (1 - critEdge) * padHeight + redPaddle.paddlePos.Y & ballPos.Y <= redPaddle.paddlePos.Y + padHeight)
             {
-                ballPos = new Vector2(padWidth, ballPos.Y);
+                ballPos.X = padWidth;
                 theta = (Math.PI - theta - critEffect);
                 ballSpeed += 0.4f;
             }
@@ -179,19 +180,19 @@ namespace pong
             // Paddle collision detection and correction including edge effect (Player 2)
             if (ballPos.X > frameWidth - padWidth - ballDim & ballPos.Y >= bluePaddle.paddlePos.Y + critEdge * padHeight & ballPos.Y <= bluePaddle.paddlePos.Y + (1 - critEdge) * padHeight)
             {
-                ballPos = new Vector2(frameWidth - padWidth - ballDim, ballPos.Y);
+                ballPos.X = frameWidth - padWidth - ballDim;
                 theta = (Math.PI - theta);
                 ballSpeed += 0.2f;
             }
             else if (ballPos.X > frameWidth - padWidth - ballDim & ballPos.Y >= - ballDim + bluePaddle.paddlePos.Y & ballPos.Y <= bluePaddle.paddlePos.Y + critEdge * padHeight)
             {
-                ballPos = new Vector2(frameWidth - padWidth - ballDim, ballPos.Y);
+                ballPos.X = frameWidth - padWidth - ballDim;
                 theta = (Math.PI - theta + critEffect);
                 ballSpeed += 0.4f;
             }
             else if (ballPos.X > frameWidth - padWidth - ballDim & ballPos.Y >= (1 - critEdge) * padHeight + bluePaddle.paddlePos.Y & ballPos.Y <=  bluePaddle.paddlePos.Y + padHeight)
             {
-                ballPos = new Vector2(frameWidth - padWidth - ballDim, ballPos.Y);
+                ballPos.X = frameWidth - padWidth - ballDim;
                 theta = (Math.PI - theta - critEffect);
                 ballSpeed += 0.4f;
             }
@@ -314,13 +315,13 @@ namespace pong
             }
             else if (gameStage == 4)
             {
-                //score gameloop
+                // score gameloop
                 redPaddle.PaddleMovement();
                 bluePaddle.PaddleMovement();
                 BallMovement();
                 BallCollision();
 
-                //score tracker
+                // score tracker
                 if (ballPos.X > frameWidth - ballDim)
                 {
                     score[0] += 1;
@@ -341,17 +342,18 @@ namespace pong
             GraphicsDevice.Clear(Color.LightBlue);
 
             int logosize = 220;
-            int startPosY = logosize;
-            //draw menu logo
+            
+            // start logo
             logoPos = new Rectangle((frameWidth / 2) - (logosize / 2), 0, logosize, logosize);
             sprites.Draw(logo, logoPos, null, Color.White);
 
-            //draw menu messages
+            // draw menu messages
             Vector2 ssize1 = comic.MeasureString(start1);
-            startString1 = new Vector2((frameWidth / 2) - (ssize1.X / 2), startPosY);
+            startString1 = new Vector2((frameWidth / 2) - (ssize1.X / 2), logosize);
             
             Vector2 ssize2 = comic.MeasureString(start2);
-            startString2 = new Vector2((frameWidth / 2) - (ssize2.X / 2), startPosY + ssize1.Y);
+            startString2 = new Vector2((frameWidth / 2) - (ssize2.X / 2), logosize + ssize1.Y);
+            
             
             sprites.DrawString(comic, start1, startString1, Color.Red);
             sprites.DrawString(comic, start2, startString2, Color.Red);
@@ -359,7 +361,7 @@ namespace pong
 
         void DrawGameLives()
         {
-            // Draw function for sprites in game
+            // draw function for sprites in game
             sprites.Draw(ball, ballPos, null, Color.White);
             sprites.Draw(redPad, redPaddle.paddlePos, null, Color.White);
             sprites.Draw(bluePad, bluePaddle.paddlePos, null, Color.White);
@@ -387,21 +389,20 @@ namespace pong
 
         void DrawGameScore()
         {
-            // Draw function for sprites in game
+            //draw function for sprites in game
             sprites.Draw(ball, ballPos, null, Color.White);
             sprites.Draw(redPad, redPaddle.paddlePos, null, Color.White);
             sprites.Draw(bluePad, bluePaddle.paddlePos, null, Color.White);
 
-            // Draw score
-            string redscore = score[0].ToString();
-            string bluescore = score[1].ToString();
+            string redScore = score[0].ToString();
+            string blueScore = score[1].ToString();
             
-            Vector2 bscoresize = comic.MeasureString(bluescore);
-            Vector2 rscorepos = new Vector2(frameWidth / 15, frameHeight / 20);
-            Vector2 bscorepos = new Vector2((frameWidth / 15) * 14 - bscoresize.X, frameHeight / 20);
+            Vector2 blueScoreSize = comic.MeasureString(blueScore);
+            Vector2 redScorePos = new Vector2(frameWidth / 15, frameHeight / 20);
+            Vector2 blueScorePos = new Vector2((frameWidth / 15) * 14 - blueScoreSize.X, frameHeight / 20);
             
-            sprites.DrawString(comic, redscore, rscorepos, Color.Red);
-            sprites.DrawString(comic, bluescore, bscorepos, Color.Blue);
+            sprites.DrawString(comic, redScore, redScorePos, Color.Red);
+            sprites.DrawString(comic, blueScore, blueScorePos, Color.Blue);
 
         }
 
@@ -409,26 +410,22 @@ namespace pong
         {
             // Text for when player 1 wins
             int winPosY = frameHeight / 12;
-            
-            Vector2 rsize = comic.MeasureString(redWin);
-            Vector2 rsize2 = comic.MeasureString(pressEnter);
-            Vector2 winPos = new Vector2((frameWidth / 2) - (rsize.X / 2), winPosY);
-            Vector2 winPos2 = new Vector2((frameWidth / 2) - (rsize2.X / 2), winPosY + rsize.Y);
-            
+            Vector2 redSize1 = comic.MeasureString(redWin);
+            Vector2 redSize2 = comic.MeasureString(pressEnter);
+            Vector2 winPos = new Vector2((frameWidth / 2) - (redSize1.X / 2), winPosY);
+            Vector2 winPos2 = new Vector2((frameWidth / 2) - (redSize2.X / 2), winPosY + redSize1.Y);
             sprites.DrawString(comic, redWin, winPos, Color.Red);
             sprites.DrawString(comic, pressEnter, winPos2, Color.Red);
         }
 
         void DrawWinBlue()
         {
-            // Text for when player 2 wins
+            // text for when blue wins
             int winPosY = frameHeight / 12;
-            
-            Vector2 bsize = comic.MeasureString(blueWin);
-            Vector2 bsize2 = comic.MeasureString(pressEnter);
-            Vector2 winPos = new Vector2((frameWidth / 2) - (bsize.X / 2), winPosY);
-            Vector2 winPos2 = new Vector2((frameWidth / 2) - (bsize2.X / 2), winPosY + bsize.Y);
-            
+            Vector2 blueSize1 = comic.MeasureString(blueWin);
+            Vector2 blueSize2 = comic.MeasureString(pressEnter);
+            Vector2 winPos = new Vector2((frameWidth / 2) - (blueSize1.X / 2), winPosY);
+            Vector2 winPos2 = new Vector2((frameWidth / 2) - (blueSize2.X / 2), winPosY + blueSize1.Y);
             sprites.DrawString(comic, blueWin, winPos, Color.Blue);
             sprites.DrawString(comic, pressEnter, winPos2, Color.Blue);
         }
@@ -436,6 +433,7 @@ namespace pong
 
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.Clear(Color.White);
             //Draw background
             GraphicsDevice.Clear(Color.White);
 

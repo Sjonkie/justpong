@@ -1,6 +1,6 @@
 Our pong game has two gamemodes: lives and score.
 The lives gamemode gives each player 3 lives. When your opponent loses all 3 lives, you win.
-The score gamemode is an endless game in which your score is tracked every time you, or your opponent, scores.
+The score gamemode is an endless game in which your score is updated every time you, or your opponent, scores.
 
 Controls:
 Player 1 Up:     W
@@ -15,3 +15,6 @@ Quit:            Esc
 Students:
 Lucas Idsinga    2258439
 Sjors Vlasblom   1116207
+
+GitHub link:
+https://github.com/Sjonkie/justpong
