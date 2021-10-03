@@ -351,6 +351,9 @@ namespace pong
 
         void DrawMenu()
         {
+            //background
+            GraphicsDevice.Clear(Color.LightBlue);
+
             int logosize = 220;
             //start logo
             logoPos = new Rectangle((frameWidth / 2) - (logosize / 2), 0, logosize, logosize);
@@ -367,8 +370,7 @@ namespace pong
             
             sprites.DrawString(comic, start1, startString1, Color.Red);
             sprites.DrawString(comic, start2, startString2, Color.Red);
-            //background
-            GraphicsDevice.Clear(Color.LightBlue);
+            
         }
 
         void DrawGameLives()
@@ -398,7 +400,7 @@ namespace pong
                 sprites.Draw(ball, scoreBall, null, Color.Blue);
             }
 
-            GraphicsDevice.Clear(Color.White);
+            
         }
 
         void DrawGameScore()
@@ -407,7 +409,6 @@ namespace pong
             sprites.Draw(ball, ballPos, null, Color.White);
             sprites.Draw(redPad, redPaddle.paddlePos, null, Color.White);
             sprites.Draw(bluePad, bluePaddle.paddlePos, null, Color.White);
-            GraphicsDevice.Clear(Color.White);
 
             string redScore = score[0].ToString();
             string blueScore = score[1].ToString();
@@ -447,6 +448,7 @@ namespace pong
 
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.Clear(Color.White);
 
             sprites.Begin();
             if (gameStage == 0)
