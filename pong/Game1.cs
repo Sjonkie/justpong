@@ -146,7 +146,8 @@ namespace pong
         protected void BallMovement()
         {
             // Updating the position of the ball
-            ballPos += new Vector2((float)(ballSpeed * Math.Cos(theta)), (float)(-ballSpeed * Math.Sin(theta)));
+            ballPos.X += (float)(ballSpeed * Math.Cos(theta));
+            ballPos.Y += (float)(-ballSpeed * Math.Sin(theta));
         }
 
         protected void BallCollision()
@@ -154,12 +155,12 @@ namespace pong
             // Floor and roof collision detection and correction
             if (ballPos.Y < 0)
             {
-                ballPos = new Vector2(ballPos.X, 0);
+                ballPos.Y = 0;
                 theta = (2 * Math.PI - theta);
             }
             else if (ballPos.Y > frameHeight - ballDim)
             {
-                ballPos = new Vector2(ballPos.X, frameHeight - ballDim);
+                ballPos.Y = frameHeight - ballDim;
                 theta = (2 * Math.PI - theta);
             }
 
@@ -167,19 +168,19 @@ namespace pong
             // Red (Player 1)
             if (ballPos.X < padWidth & ballPos.Y >= redPaddle.paddlePos.Y + critEdge * padHeight & ballPos.Y <= redPaddle.paddlePos.Y + (1 - critEdge) * padHeight)
             {
-                ballPos = new Vector2(padWidth, ballPos.Y);
+                ballPos.X = padWidth;
                 theta = (Math.PI - theta);
                 ballSpeed += 0.2f;
             }
             else if (ballPos.X < padWidth & ballPos.Y >= -ballDim + redPaddle.paddlePos.Y & ballPos.Y - ballDim <= redPaddle.paddlePos.Y + critEdge * padHeight)
             {
-                ballPos = new Vector2(padWidth, ballPos.Y);
+                ballPos.X =  padWidth;
                 theta = (Math.PI - theta + critEffect);
                 ballSpeed += 0.4f;
             }
             else if (ballPos.X < padWidth & ballPos.Y >= (1 - critEdge) * padHeight + redPaddle.paddlePos.Y & ballPos.Y <= redPaddle.paddlePos.Y + padHeight)
             {
-                ballPos = new Vector2(padWidth, ballPos.Y);
+                ballPos.X = padWidth;
                 theta = (Math.PI - theta - critEffect);
                 ballSpeed += 0.4f;
             }
@@ -188,19 +189,19 @@ namespace pong
             // Blue (Player 2)
             if (ballPos.X > frameWidth - padWidth - ballDim & ballPos.Y >= bluePaddle.paddlePos.Y + critEdge * padHeight & ballPos.Y <= bluePaddle.paddlePos.Y + (1 - critEdge) * padHeight)
             {
-                ballPos = new Vector2(frameWidth - padWidth - ballDim, ballPos.Y);
+                ballPos.X = frameWidth - padWidth - ballDim;
                 theta = (Math.PI - theta);
                 ballSpeed += 0.2f;
             }
             else if (ballPos.X > frameWidth - padWidth - ballDim & ballPos.Y >= - ballDim + bluePaddle.paddlePos.Y & ballPos.Y <= bluePaddle.paddlePos.Y + critEdge * padHeight)
             {
-                ballPos = new Vector2(frameWidth - padWidth - ballDim, ballPos.Y);
+                ballPos.X = frameWidth - padWidth - ballDim;
                 theta = (Math.PI - theta + critEffect);
                 ballSpeed += 0.4f;
             }
             else if (ballPos.X > frameWidth - padWidth - ballDim & ballPos.Y >= (1 - critEdge) * padHeight + bluePaddle.paddlePos.Y & ballPos.Y <=  bluePaddle.paddlePos.Y + padHeight)
             {
-                ballPos = new Vector2(frameWidth - padWidth - ballDim, ballPos.Y);
+                ballPos.X = frameWidth - padWidth - ballDim;
                 theta = (Math.PI - theta - critEffect);
                 ballSpeed += 0.4f;
             }
