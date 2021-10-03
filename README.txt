@@ -15,3 +15,6 @@ Quit:            Esc
 Students:
 Lucas Idsinga    2258439
 Sjors Vlasblom   1116207
+
+GitHub link:
+https://github.com/Sjonkie/justpong
