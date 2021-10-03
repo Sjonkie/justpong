@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace pong
 {
     class paddle : Game
     {
+        // declare paddle variables
         public int padWidth, padHeight;
-        public int startpadHeight, startpadWidth;
         public int frameWidth, frameHeight;
         public string color;
         public Vector2 paddlePos;
@@ -17,6 +14,7 @@ namespace pong
         Keys up;
         Keys down;
 
+        
         public paddle(int apadWidth, int apadHeight, int aframeWidth, int aframeHeight, string acolor)
         {
             padWidth = apadWidth;
@@ -26,6 +24,7 @@ namespace pong
             frameHeight = aframeHeight;
             playerSpeed = 5;
 
+            // paddle movement keys
             if (color == "red")
             {
                 up = Keys.W;
@@ -41,6 +40,7 @@ namespace pong
 
         public Vector2 PaddleStart()
         {
+            // paddle starting position
             if (color == "red")
             {
                 paddlePos.X = 0;
@@ -58,14 +58,14 @@ namespace pong
         {
             int frameHeight_padHeight = frameHeight - padHeight;
 
-            // up
+            // paddle movement up
             if (Keyboard.GetState().IsKeyDown(up))
             {
                 paddlePos.Y -= playerSpeed;
                 if (paddlePos.Y < 0)
                     paddlePos.Y = 0;
             }
-
+            // paddle movement down
             else if (Keyboard.GetState().IsKeyDown(down))
             {
                 paddlePos.Y += playerSpeed;
@@ -73,8 +73,5 @@ namespace pong
                     paddlePos.Y = frameHeight_padHeight;
             }
         }
-
-
-
     }
 }
