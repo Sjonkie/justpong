@@ -348,11 +348,11 @@ namespace pong
             sprites.Draw(logo, logoPos, null, Color.White);
 
             // draw menu messages
-            Vector2 ssize1 = comic.MeasureString(start1);
-            startString1 = new Vector2((frameWidth / 2) - (ssize1.X / 2), logosize);
+            Vector2 sSize1 = comic.MeasureString(start1);
+            startString1 = new Vector2((frameWidth / 2) - (sSize1.X / 2), logosize);
             
-            Vector2 ssize2 = comic.MeasureString(start2);
-            startString2 = new Vector2((frameWidth / 2) - (ssize2.X / 2), logosize + ssize1.Y);
+            Vector2 sSize2 = comic.MeasureString(start2);
+            startString2 = new Vector2((frameWidth / 2) - (sSize2.X / 2), logosize + sSize1.Y);
             
             
             sprites.DrawString(comic, start1, startString1, Color.Red);
@@ -433,7 +433,6 @@ namespace pong
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
             //Draw background
             GraphicsDevice.Clear(Color.White);
 
