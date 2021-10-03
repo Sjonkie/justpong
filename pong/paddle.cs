@@ -37,10 +37,6 @@ namespace pong
                 up = Keys.Up;
                 down = Keys.Down;
             }
-
-
-
-
         }
 
         public Vector2 paddlestart()
