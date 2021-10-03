@@ -8,22 +8,22 @@ namespace pong
 {
     class paddle : Game
     {
-        public int padx, pady;
-        public int startpady, startpadx;
-        public int framex, framey;
+        public int padWidth, padHeight;
+        public int startpadHeight, startpadWidth;
+        public int frameWidth, frameHeight;
         public string color;
-        public Vector2 startpad;
+        public Vector2 paddlePos;
         private int playerSpeed;
         Keys up;
         Keys down;
 
-        public paddle(int apadx, int apady, int aframex, int aframey, string acolor)
+        public paddle(int apadWidth, int apadHeight, int aframeWidth, int aframeHeight, string acolor)
         {
-            padx = apadx;
-            pady = apady;
+            padWidth = apadWidth;
+            padHeight = apadHeight;
             color = acolor;
-            framex = aframex;
-            framey = aframey;
+            frameWidth = aframeWidth;
+            frameHeight = aframeHeight;
             playerSpeed = 5;
 
             if (color == "red")
@@ -37,58 +37,40 @@ namespace pong
                 up = Keys.Up;
                 down = Keys.Down;
             }
-
-
-
-
         }
 
-        public Vector2 paddlestart()
+        public Vector2 PaddleStart()
         {
-            startpady = framey / 2 - pady / 2;
-            startpadx = framex - padx;
             if (color == "red")
             {
-                startpad.X = 0;
+                paddlePos.X = 0;
             }
             else if (color == "blue")
             {
-                startpad.X = framex - padx;
+                paddlePos.X = frameWidth - padWidth;
             }
-            startpad.Y = framey / 2 - pady / 2;
+            paddlePos.Y = frameHeight / 2 - padHeight / 2;
 
-            return startpad;
+            return paddlePos;
         }
 
-        public void paddlemovement(string color)
+        public void PaddleMovement()
         {
-            int frameypady = framey - pady;
+            int frameHeight_padHeight = frameHeight - padHeight;
 
-            if (color == "red")
-            {
-                up = Keys.W;
-                down = Keys.S;
-            }
-            
-            else if (color == "blue")
-            {
-                up = Keys.Up;
-                down = Keys.Down;
-            }
-            
             // up
             if (Keyboard.GetState().IsKeyDown(up))
             {
-                startpad.Y -= playerSpeed;
-                if (startpad.Y < 0)
-                    startpad.Y = 0;
+                paddlePos.Y -= playerSpeed;
+                if (paddlePos.Y < 0)
+                    paddlePos.Y = 0;
             }
 
             else if (Keyboard.GetState().IsKeyDown(down))
             {
-                startpad.Y += playerSpeed;
-                if (startpad.Y > frameypady)
-                    startpad.Y = frameypady;
+                paddlePos.Y += playerSpeed;
+                if (paddlePos.Y > frameHeight_padHeight)
+                    paddlePos.Y = frameHeight_padHeight;
             }
         }
 
