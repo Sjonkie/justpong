@@ -331,13 +331,13 @@ namespace pong
                 BallCollision();
                 if (ballPos.X > frameWidth - ballDim)
                 {
-                    /*bluescore += 1*/
+                    /*blueScore += 1*/
                     score[0] += 1;
                     Reset();
                 }
                 if (ballPos.X < 0)
                 {
-                    /*redscore += 1*/
+                    /*redScore += 1*/
                     score[1] += 1;
                     Reset();
                 }
@@ -359,10 +359,10 @@ namespace pong
             //press 1,2 to start text
             int startPosY = logosize;
             
-            Vector2 ssize1 = comic.MeasureString(start1);
-            startString1 = new Vector2((frameWidth / 2) - (ssize1.X / 2), startPosY);
-            Vector2 ssize2 = comic.MeasureString(start2);
-            startString2 = new Vector2((frameWidth / 2) - (ssize2.X / 2), startPosY + ssize1.Y);
+            Vector2 sSize1 = comic.MeasureString(start1);
+            startString1 = new Vector2((frameWidth / 2) - (sSize1.X / 2), startPosY);
+            Vector2 sSize2 = comic.MeasureString(start2);
+            startString2 = new Vector2((frameWidth / 2) - (sSize2.X / 2), startPosY + sSize1.Y);
             
             
             sprites.DrawString(comic, start1, startString1, Color.Red);
@@ -409,16 +409,15 @@ namespace pong
             sprites.Draw(bluePad, bluePaddle.paddlePos, null, Color.White);
             GraphicsDevice.Clear(Color.White);
 
-            string redscore = score[0].ToString();
-            string bluescore = score[1].ToString();
+            string redScore = score[0].ToString();
+            string blueScore = score[1].ToString();
             
-            Vector2 rscoresize = comic.MeasureString(redscore);
-            Vector2 bscoresize = comic.MeasureString(bluescore);
-            Vector2 rscorepos = new Vector2(frameWidth / 15, frameHeight / 20);
-            Vector2 bscorepos = new Vector2((frameWidth / 15) * 14 - bscoresize.X, frameHeight / 20);
+            Vector2 blueScoreSize = comic.MeasureString(blueScore);
+            Vector2 redScorePos = new Vector2(frameWidth / 15, frameHeight / 20);
+            Vector2 blueScorePos = new Vector2((frameWidth / 15) * 14 - blueScoreSize.X, frameHeight / 20);
             
-            sprites.DrawString(comic, redscore, rscorepos, Color.Red);
-            sprites.DrawString(comic, bluescore, bscorepos, Color.Blue);
+            sprites.DrawString(comic, redScore, redScorePos, Color.Red);
+            sprites.DrawString(comic, blueScore, blueScorePos, Color.Blue);
 
         }
 
@@ -426,10 +425,10 @@ namespace pong
         {
             //text for when red wins
             int winPosY = frameHeight / 12;
-            Vector2 rsize = comic.MeasureString(redWin);
-            Vector2 rsize2 = comic.MeasureString(pressEnter);
-            Vector2 winPos = new Vector2((frameWidth / 2) - (rsize.X / 2), winPosY);
-            Vector2 winPos2 = new Vector2((frameWidth / 2) - (rsize2.X / 2), winPosY + rsize.Y);
+            Vector2 redSize1 = comic.MeasureString(redWin);
+            Vector2 redSize2 = comic.MeasureString(pressEnter);
+            Vector2 winPos = new Vector2((frameWidth / 2) - (redSize1.X / 2), winPosY);
+            Vector2 winPos2 = new Vector2((frameWidth / 2) - (redSize2.X / 2), winPosY + redSize1.Y);
             sprites.DrawString(comic, redWin, winPos, Color.Red);
             sprites.DrawString(comic, pressEnter, winPos2, Color.Red);
         }
@@ -437,10 +436,10 @@ namespace pong
         void DrawWinBlue()
         {
             //text for when blue wins
-            Vector2 bsize = comic.MeasureString(blueWin);
-            Vector2 bsize2 = comic.MeasureString(pressEnter);
-            Vector2 winPos = new Vector2((frameWidth / 2) - (bsize.X / 2), winPosY);
-            Vector2 winPos2 = new Vector2((frameWidth / 2) - (bsize2.X / 2), winPosY + bsize.Y);
+            Vector2 blueSize1 = comic.MeasureString(blueWin);
+            Vector2 blueSize2 = comic.MeasureString(pressEnter);
+            Vector2 winPos = new Vector2((frameWidth / 2) - (blueSize1.X / 2), winPosY);
+            Vector2 winPos2 = new Vector2((frameWidth / 2) - (blueSize2.X / 2), winPosY + blueSize1.Y);
             sprites.DrawString(comic, blueWin, winPos, Color.Blue);
             sprites.DrawString(comic, pressEnter, winPos2, Color.Blue);
         }
