@@ -44,7 +44,7 @@ namespace pong
         private string start2 = "PRESS 2 FOR SCORE";
         private string blueWin ="BLUE WINS";
         private string redWin ="RED WINS";
-        private string pressEnter = "PRESS SPACE";
+        private string pressEnter = "PRESS TAB";
         //lives
         /*int redlives, bluelives;*/
         private int[] lives;
@@ -314,7 +314,7 @@ namespace pong
                         Reset();
                 }
             }
-            else if ((gameStage == 2 || gameStage == 3) && Keyboard.GetState().IsKeyDown(Keys.Space))
+            else if ((gameStage == 2 || gameStage == 3) && Keyboard.GetState().IsKeyDown(Keys.Tab))
             {
                 Reset();
                 lives[0] = 3;
